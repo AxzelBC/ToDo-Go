@@ -3,7 +3,7 @@ package usecasetask
 import (
 	"github.com/AxzelBC/ToDo-Go/internal/app/port/IRepository"
 	"github.com/AxzelBC/ToDo-Go/internal/app/port/IService"
-	"github.com/AxzelBC/ToDo-Go/internal/domain"
+	"github.com/AxzelBC/ToDo-Go/internal/domain/DomainTask"
 )
 
 type service struct {
@@ -16,15 +16,15 @@ func NewTaskService(repository IRepository.ITaskPort) IService.ServiceTask {
 	}
 }
 
-func (s *service) Create(domain.Task) error {
-	return s.repository.Create()
+func (s *service) Create(createTask *DomainTask.CreateTask) (*DomainTask.Task, error) {
+	taskModel := DomainTask.ToDomainMapper(createTask)
+	return s.repository.Create(taskModel)
 }
 
-func (s *service) GetById(id uint) domain.Task {
-	//s.repository.GetById()
-	return domain.Task{}
+func (s *service) GetById(id uint) (*DomainTask.Task, error) {
+	return s.repository.GetById(id)
 }
 
-func (s *service) GetAll() error {
-	return s.repository.GetAll()
+func (s *service) GetAll(id uint) (*[]DomainTask.Task, error) {
+	return s.repository.GetAll(id)
 }

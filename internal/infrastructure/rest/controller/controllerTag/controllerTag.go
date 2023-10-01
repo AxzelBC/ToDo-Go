@@ -1,4 +1,4 @@
-package controllerList
+package controllerTag
 
 import (
 	"log"
@@ -6,32 +6,32 @@ import (
 	"strconv"
 
 	"github.com/AxzelBC/ToDo-Go/internal/app/port/IService"
-	"github.com/AxzelBC/ToDo-Go/internal/domain/DomainList"
+	"github.com/AxzelBC/ToDo-Go/internal/domain/DomainTag"
 	"github.com/AxzelBC/ToDo-Go/internal/infrastructure/rest/utils"
 	"github.com/gin-gonic/gin"
 )
 
 type Controller struct {
-	ServiceList IService.ServiceList
+	ServiceTag IService.ServiceTag
 }
 
-func (c *Controller) NewList(ctx *gin.Context) {
-	var request NewListRequest
+func (c *Controller) NewTag(ctx *gin.Context) {
+	var request NewTagRequest
 
 	if err := utils.BindToJson(ctx, &request); err != nil {
+		log.Printf("\nError: %+v\n", err)
 		ctx.JSON(http.StatusBadRequest, gin.H{
 			"error": err,
 		})
 		return
 	}
 
-	newList := DomainList.CreateList{
-		Title:  request.Title,
-		Status: request.Status,
-		Tasks:  request.Task,
+	newTag := DomainTag.CreateTag{
+		Title: request.Title,
+		Color: request.Color,
 	}
 
-	domainListCreated, err := c.ServiceList.Create(&newList)
+	domainTagCreated, err := c.ServiceTag.Create(&newTag)
 
 	if err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{
@@ -41,18 +41,18 @@ func (c *Controller) NewList(ctx *gin.Context) {
 	}
 
 	ctx.JSON(http.StatusCreated, gin.H{
-		"data": domainListCreated,
+		"data": domainTagCreated,
 	})
 	return
 }
 
-func (c *Controller) GetListByID(ctx *gin.Context) {
+func (c *Controller) GetTagByID(ctx *gin.Context) {
 
 	param, err := strconv.Atoi(ctx.Param("id"))
 
 	if err != nil || param < 1 {
 
-		log.Printf("\nNo es un parámetro válido\n")
+		log.Printf("No es un parámetro válido\n")
 		ctx.JSON(http.StatusBadRequest, gin.H{
 			"error": "No es un parámetro válido",
 		})
@@ -60,30 +60,28 @@ func (c *Controller) GetListByID(ctx *gin.Context) {
 		return
 	}
 
-	idList := uint(param)
+	tagID := uint(param)
 
-	list, err := c.ServiceList.GetById(idList)
+	tag, err := c.ServiceTag.GetById(tagID)
 
 	if err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{
 			"error": err,
 		})
+		return
 	}
 
 	ctx.JSON(http.StatusOK, gin.H{
-		"data": list,
+		"data": tag,
 	})
 	return
 }
 
-func (c *Controller) GetAllLists(ctx *gin.Context) {
+func (c *Controller) GetAllTags(ctx *gin.Context) {
 
-	list, err := c.ServiceList.GetAll()
+	tag, err := c.ServiceTag.GetAll()
 
 	if err != nil {
-
-		log.Printf("\n%+v\n", err)
-
 		ctx.JSON(http.StatusBadRequest, gin.H{
 			"error": err,
 		})
@@ -92,7 +90,7 @@ func (c *Controller) GetAllLists(ctx *gin.Context) {
 	}
 
 	ctx.JSON(http.StatusOK, gin.H{
-		"data": list,
+		"data": tag,
 	})
 	return
 }

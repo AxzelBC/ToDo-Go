@@ -33,7 +33,7 @@ func NewHttpConfig(router *gin.Engine, config config.HttpServerConfig) IServer.I
 }
 
 // Run server
-func (s httpServer) Start() {
+func (s *httpServer) Start() {
 	go func() {
 		if err := s.server.ListenAndServe(); err != nil && err != http.ErrServerClosed {
 			log.Fatalf(
@@ -50,7 +50,7 @@ func (s httpServer) Start() {
 }
 
 // Close server
-func (s httpServer) Stop() {
+func (s *httpServer) Stop() {
 	ctx, cancel := context.WithTimeout(
 		context.Background(),
 		time.Duration(3)*time.Second,

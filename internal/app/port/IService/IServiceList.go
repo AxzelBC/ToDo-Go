@@ -1,9 +1,11 @@
 package IService
 
-import "github.com/AxzelBC/ToDo-Go/internal/domain"
+import (
+	"github.com/AxzelBC/ToDo-Go/internal/domain/DomainList"
+)
 
 type ServiceList interface {
-	Create(domain.List) error
-	GetById(id uint) domain.List
-	GetAll() error
+	Create(*DomainList.CreateList) (*DomainList.List, error)
+	GetById(idList uint) (*DomainList.List, error)
+	GetAll() (*[]DomainList.List, error)
 }

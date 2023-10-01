@@ -33,22 +33,15 @@ func Runner() {
 
 	// Create DB
 	db, err := repository.NewDB(
-		config.DatabaseConfig{},
+		&config.DatabaseConfig{},
 	)
 
 	if err != nil {
 		log.Fatalf("failed to new database err=%s\n", err.Error())
 	}
 
+	// Init routes and controllers
 	routes.AppRoutes(instance, &db)
-
-	//listRepository := repository.NewIListPort(db)
-
-	//listRepository.CreateList()
-	//listRepository.GetAll()
-
-	// add controllers
-	//controller.TaskController(instance)
 
 	// start the http server
 	httpServer.Start()
