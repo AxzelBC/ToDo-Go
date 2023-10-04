@@ -18,12 +18,14 @@ import (
 func Runner() {
 	instance := gin.New()
 
+	// add middlewares
 	instance.Use(
 		gin.Logger(),
 		gin.Recovery(),
 		middleware.CORSMiddleware(),
 	)
 
+	// server config
 	httpServer := server.NewHttpConfig(
 		instance,
 		config.HttpServerConfig{
